@@ -1,4 +1,4 @@
-package altice.lab.cache;
+package altice.lab.common;
 
 import java.util.Objects;
 
