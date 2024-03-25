@@ -77,8 +77,7 @@ public class LabSequenceService {
 
 
     public BigInteger calculateLabSeq(final BigInteger n) {
-
-        cachMap.clear();
+        
         if (n.intValue() < 0) {
             throw new InvalidNumberException("Number must be positive");
         }
