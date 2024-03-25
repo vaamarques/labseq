@@ -8,8 +8,11 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.StopWatch;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.math.BigInteger;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
@@ -27,27 +30,48 @@ public class LabSeqUnitTest {
     }
 
     @Test
-    void testLabSequenceEndpoint10() {
-        Assertions.assertEquals(service.calculateLabSeq(1), 1);
+    void testLabSequence1() {
+        Assertions.assertEquals(service.calculateLabSeq(BigInteger.valueOf(1)), BigInteger.valueOf(1));
     }
     @Test
-    void testLabSequenceEndpoint100() {
-        Assertions.assertEquals(service.calculateLabSeq(10), 3);
+    void testLabSequence10() {
+        Assertions.assertEquals(service.calculateLabSeq(BigInteger.valueOf(10)), BigInteger.valueOf(3));
     }
 
     @Test
-    void testLabSequenceEndpoint_Print() {
-        standardOut.println(service.calculateLabSeq(0));
-        standardOut.println(service.calculateLabSeq(1));
-        standardOut.println(service.calculateLabSeq(2));
-        standardOut.println(service.calculateLabSeq(3));
-        standardOut.println(service.calculateLabSeq(4));
-        standardOut.println(service.calculateLabSeq(5));
-        standardOut.println(service.calculateLabSeq(6));
-        standardOut.println(service.calculateLabSeq(7));
-        standardOut.println(service.calculateLabSeq(8));
-        standardOut.println(service.calculateLabSeq(9));
-        standardOut.println(service.calculateLabSeq(10));
+    void testLabSequence10000() {
+        final StopWatch watch = new StopWatch();
+        watch.start("Testing 10000");
+        standardOut.println("Testing 10000");
+        standardOut.println(service.calculateLabSeq(BigInteger.valueOf(10000)));
+        watch.stop();
+        standardOut.println(String.format("Takes %s s", watch.getTotalTimeSeconds()));
+    }
+
+    @Test
+    void testLabSequence100000() {
+        final StopWatch watch = new StopWatch();
+        watch.start("Testing 100000");
+        standardOut.println("Testing 100000");
+        standardOut.println(service.calculateLabSeq(BigInteger.valueOf(100000)));
+        watch.stop();
+        standardOut.println(String.format("Takes %s s", watch.getTotalTimeSeconds()));
+    }
+
+    @Test
+    void testLabSequence_Print() {
+        standardOut.println(service.calculateLabSeq(BigInteger.valueOf(0)));
+        standardOut.println(service.calculateLabSeq(BigInteger.valueOf(1)));
+        standardOut.println(service.calculateLabSeq(BigInteger.valueOf(2)));
+        standardOut.println(service.calculateLabSeq(BigInteger.valueOf(3)));
+        standardOut.println(service.calculateLabSeq(BigInteger.valueOf(4)));
+        standardOut.println(service.calculateLabSeq(BigInteger.valueOf(5)));
+        standardOut.println(service.calculateLabSeq(BigInteger.valueOf(6)));
+        standardOut.println(service.calculateLabSeq(BigInteger.valueOf(7)));
+        standardOut.println(service.calculateLabSeq(BigInteger.valueOf(8)));
+        standardOut.println(service.calculateLabSeq(BigInteger.valueOf(9)));
+        standardOut.println(service.calculateLabSeq(BigInteger.valueOf(10)));
+
     }
 
 }

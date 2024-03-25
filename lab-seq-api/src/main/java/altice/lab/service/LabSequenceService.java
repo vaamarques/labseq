@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
-import javax.annotation.PostConstruct;
+
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,44 +14,36 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class LabSequenceService {
-    private final Map<Integer, Integer> cachMap = new HashMap<>();
+    private final Map<BigInteger, BigInteger> cachMap = new HashMap<>();
 
-    @PostConstruct
-    private void fillCache() {
-        for (int i = 0; i < 1000000; i++) {
-            getLabSeq(i);
-        }
-    }
+    private BigInteger getLabSeq(final BigInteger n) {
 
+        if (n.intValue() == 0) return BigInteger.ZERO;
+        if (n.intValue() == 1) return BigInteger.ONE;
+        if (n.intValue() == 2) return BigInteger.ZERO;
+        if (n.intValue() == 3) return BigInteger.ONE;
 
-    private Integer getLabSeq(final Integer n) {
-
-        if (n == 0) return 0;
-        if (n == 1) return 1;
-        if (n == 2) return 0;
-        if (n == 3) return 1;
-
-        final Integer valueOnMapN = cachMap.get(n);
-        final Integer valueOnMapN3 = cachMap.get(n - 3);
-        final Integer valueOnMapN4 = cachMap.get(n - 4);
+        final BigInteger valueOnMapN = cachMap.get(n);
+        final BigInteger valueOnMapN3 = cachMap.get(BigInteger.valueOf(n.intValue() - 3));
+        final BigInteger valueOnMapN4 = cachMap.get(BigInteger.valueOf(n.intValue() - 4));
 
 
         if (valueOnMapN == null) {
 
-            Integer resultN3 = valueOnMapN3;
-            Integer resultN4 = valueOnMapN4;
+            BigInteger resultN3 = valueOnMapN3;
+            BigInteger resultN4 = valueOnMapN4;
 
             if (valueOnMapN3 == null) {
-                resultN3 = getLabSeq(n - 3);
-                cachMap.putIfAbsent(n - 3, resultN3);
+                resultN3 = getChildLabSeq(BigInteger.valueOf(n.intValue() - 3));
+                cachMap.putIfAbsent(BigInteger.valueOf(n.intValue() - 3), resultN3);
             }
 
             if (valueOnMapN4 == null) {
-                resultN4 = getLabSeq(n - 4);
-                cachMap.putIfAbsent(n - 4, resultN4);
+                resultN4 = getChildLabSeq(BigInteger.valueOf(n.intValue() - 4));
+                cachMap.putIfAbsent(BigInteger.valueOf(n.intValue() - 4), resultN4);
             }
 
-            int result = resultN3 + resultN4;
+            BigInteger result = resultN3.add(resultN4);
             cachMap.putIfAbsent(n, result);
             return result;
         }
@@ -59,16 +52,41 @@ public class LabSequenceService {
 
     }
 
-    public Integer calculateLabSeq(final Integer n) {
+    private BigInteger getChildLabSeq(final BigInteger n) {
 
-        if (n < 0) {
+        if (n.intValue() == 0) return BigInteger.ZERO;
+        if (n.intValue() == 1) return BigInteger.ONE;
+        if (n.intValue() == 2) return BigInteger.ZERO;
+        if (n.intValue() == 3) return BigInteger.ONE;
+
+        BigInteger seqN0 = BigInteger.ZERO;
+        BigInteger seqN1 = BigInteger.ONE;
+        BigInteger seqN2 = BigInteger.ZERO;
+        BigInteger seqN3 = BigInteger.ONE;
+        BigInteger result = BigInteger.ZERO;
+
+        for (int i = 4; i <= n.intValue(); i++) {
+            result = seqN0.add(seqN1);
+            seqN0 = seqN1;
+            seqN1 = seqN2;
+            seqN2 = seqN3;
+            seqN3 = result;
+        }
+        return result;
+    }
+
+
+    public BigInteger calculateLabSeq(final BigInteger n) {
+
+        cachMap.clear();
+        if (n.intValue() < 0) {
             throw new InvalidNumberException("Number must be positive");
         }
 
         final StopWatch watch = new StopWatch();
         watch.start("Start calculating Lab Sequence");
 
-        final Integer labSeq = getLabSeq(n);
+        final BigInteger labSeq = getLabSeq(n);
 
         watch.stop();
         log.info("Lab Sequence take {} ms to execute ", watch.getTotalTimeMillis());

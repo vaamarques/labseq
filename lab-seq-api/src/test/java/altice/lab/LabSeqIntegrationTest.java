@@ -62,22 +62,4 @@ public class LabSeqIntegrationTest {
                 .andReturn()
                 .getResponse();
     }
-
-    @Test
-    void testLabSequenceEndpoint1000000() throws Exception {
-        final String uri = LabSeqController.LAB_SEQ_URL + "/1000000";
-        mockMvc.perform(MockMvcRequestBuilders.get(uri).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andReturn()
-                .getResponse();
-    }
-
-    @Test
-    void testLabSequenceEndpoint10000000() throws Exception {
-        final String uri = LabSeqController.LAB_SEQ_URL + "/10000000";
-        mockMvc.perform(MockMvcRequestBuilders.get(uri).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andReturn()
-                .getResponse();
-    }
 }

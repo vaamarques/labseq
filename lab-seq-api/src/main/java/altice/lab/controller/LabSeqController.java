@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.math.BigInteger;
 
 @Slf4j
 @RestController
@@ -26,10 +27,10 @@ public class LabSeqController implements BaseController {
 
     @Operation(summary = "Get Lab Sequence")
     @GetMapping(value = "/{n}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> getLabSeq(@Valid @NotNull @PathVariable("n") final Integer n){
+    public ResponseEntity<BigInteger> getLabSeq(@Valid @NotNull @PathVariable("n") final BigInteger n){
         log.info("Received a Get Lab Sequence request");
 
-        final Integer nFinal = service.calculateLabSeq(n);
+        final BigInteger nFinal = service.calculateLabSeq(n);
 
         log.info("Sending a Get Lab Sequence response");
 
